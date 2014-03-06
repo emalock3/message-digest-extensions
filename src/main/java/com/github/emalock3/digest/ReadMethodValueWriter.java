@@ -7,6 +7,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 abstract class ReadMethodValueWriter {
+	
+	private static final ReadMethodValueWriter NULL_WRITER = new NullWriter();
+	
 	void write(DataOutputStream dos, Object target, PropertyDescriptor pd) throws ReflectiveOperationException, IOException {
 		Method m = pd.getReadMethod();
 		if (m.isAccessible()) {
@@ -16,7 +19,12 @@ abstract class ReadMethodValueWriter {
 				throw new RuntimeException(e);
 			}
 		}
-		process(dos, target, m.invoke(target));
+		Object value = m.invoke(target);
+		if (value != null) {
+			process(dos, target, m.invoke(target));
+		} else {
+			NULL_WRITER.process(dos, target, value);
+		}
 	}
 	abstract void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException;
 	
@@ -118,6 +126,12 @@ abstract class ReadMethodValueWriter {
 	private static class ObjectWriter extends ReadMethodValueWriter {
 		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeUTF(value.toString());
+		}
+	}
+	
+	private static class NullWriter extends ReadMethodValueWriter {
+		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+			dos.write(0);
 		}
 	}
 	
