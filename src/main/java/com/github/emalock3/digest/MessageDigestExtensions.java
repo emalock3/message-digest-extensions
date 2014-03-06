@@ -80,6 +80,14 @@ public final class MessageDigestExtensions {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	private static MessageDigest from(Algorithm algorithm) {
+		try {
+			return MessageDigest.getInstance(algorithm.getName());
+		} catch (NoSuchAlgorithmException ignore) {
+			throw new RuntimeException(ignore);
+		}
+	}
 
 	private static List<PropertyDescriptor> lookupDigestKeys(Class<?> c) {
 		List<PropertyDescriptor> descriptors = digestKeysCache.get(c);
@@ -87,10 +95,6 @@ public final class MessageDigestExtensions {
 			return descriptors;
 		}
 		Set<String> fields = findDigestKeyFieldNames(c);
-		if (fields.isEmpty()) {
-			throw new IllegalArgumentException(
-					String.format("DigestKey annotation is not found in class[%s]", c.getName()));
-		}
 		PropertyDescriptor[] descriptorsArray;
 		try {
 			descriptorsArray = Introspector.getBeanInfo(c).getPropertyDescriptors();
@@ -99,7 +103,7 @@ public final class MessageDigestExtensions {
 		}
 		descriptors = new ArrayList<>();
 		for (PropertyDescriptor pd : descriptorsArray) {
-			if (fields.contains(pd.getName())) {
+			if (fields.contains(pd.getName()) || pd.getReadMethod().isAnnotationPresent(DigestKey.class)) {
 				descriptors.add(pd);
 			}
 		}
@@ -114,6 +118,17 @@ public final class MessageDigestExtensions {
 		});
 		digestKeysCache.put(c, descriptors);
 		return descriptors;
+	}
+	
+	private static Set<String> findDigestKeyFieldNames(Class<?> c) {
+		Field[] fieldsArray = c.getDeclaredFields();
+		Set<String> fields = new HashSet<>();
+		for (Field f: fieldsArray) {
+			if (f.isAnnotationPresent(DigestKey.class)) {
+				fields.add(f.getName());
+			}
+		}
+		return fields;
 	}
 	
 	private static Algorithm lookupAlgorithm(Class<?> c) {
@@ -168,24 +183,5 @@ public final class MessageDigestExtensions {
 	 */
 	public static String toHexMessageDigest(MessageDigestable input) {
 		return toHexString(toMessageDigest(input));
-	}
-	
-	private static Set<String> findDigestKeyFieldNames(Class<?> c) {
-		Field[] fieldsArray = c.getDeclaredFields();
-		Set<String> fields = new HashSet<>();
-		for (Field f: fieldsArray) {
-			if (f.getAnnotation(DigestKey.class) != null) {
-				fields.add(f.getName());
-			}
-		}
-		return fields;
-	}
-	
-	private static MessageDigest from(Algorithm algorithm) {
-		try {
-			return MessageDigest.getInstance(algorithm.getName());
-		} catch (NoSuchAlgorithmException ignore) {
-			throw new RuntimeException(ignore);
-		}
 	}
 }
