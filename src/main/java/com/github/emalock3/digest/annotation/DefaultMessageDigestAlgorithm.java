@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 import com.github.emalock3.digest.MessageDigestExtensions.Algorithm;
 
 /**
+ * The annotation provides to specified the default MessageDigest's algorithms for MessageDigestExtensions.
+ * 
  * @author Shinobu Aoki
  */
 @Retention(RetentionPolicy.RUNTIME)

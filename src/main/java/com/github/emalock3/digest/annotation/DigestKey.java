@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Specifies the field of an entity for hash.
+ * 
  * @author Shinobu Aoki
  */
 @Retention(RetentionPolicy.RUNTIME)

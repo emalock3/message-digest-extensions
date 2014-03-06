@@ -1,7 +1,7 @@
 package com.github.emalock3.digest;
 
 /**
- * @author Shinobu Aoki
+ * Marker interface for the MessageDigestExtensions
  */
 public interface MessageDigestable {
 }

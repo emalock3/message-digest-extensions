@@ -21,6 +21,8 @@ import com.github.emalock3.digest.annotation.DigestKey;
 import com.github.emalock3.digest.annotation.DefaultMessageDigestAlgorithm;
 
 /**
+ * The class Provides utility methods for java.security.MessageDigest.
+ * 
  * @author Shinobu Aoki
  */
 public final class MessageDigestExtensions {
