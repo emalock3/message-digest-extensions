@@ -15,7 +15,7 @@ MessageDigestExtensions is a Java library. It provides a way to easily generate 
 		<dependency>
 			<groupId>com.github.emalock3.digest</groupId>
 			<artifactId>message-digest-extensions</artifactId>
-			<version>0.9.2</version>
+			<version>0.9.3</version>
 		</dependency>
 		
 		...
