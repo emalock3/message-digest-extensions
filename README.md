@@ -75,6 +75,8 @@ MessageDigestExtensions is a Java library. It provides a way to easily generate 
 		}
 	}
 
+See also [Example](https://github.com/emalock3/message-digest-extensions/tree/master/example).
+
 ## License
 
 Apache License, Version 2.0
