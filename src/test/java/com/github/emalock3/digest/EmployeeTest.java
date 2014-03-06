@@ -14,10 +14,10 @@ public class EmployeeTest {
 	@Test
 	public void test() {
 		Employee emp = new Employee("1234-4321", "Jiro Fusafusa", "jiro@test.hoge", 1234, 1.234);
-		String sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+		String sha256 = "5ddd8083b67bb5fbb5ecca4949c7ca8c4173d087bbf9114b008ed7e428599c43";
 		assertThat(emp.toHexMessageDigest(), is(sha256));
 		String sha384 = 
-				"38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b";
+				"20198b9deb94be0f3423647b436a0e49013688b8d4e8478be9fb0ca40dc72a4ac0ed449a48c543d267b9ed18b3de3406";
 		assertThat(emp.toHexMessageDigest(Algorithm.SHA384), is(sha384));
 	}
 

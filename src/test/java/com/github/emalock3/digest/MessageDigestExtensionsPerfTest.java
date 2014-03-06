@@ -16,8 +16,8 @@ public class MessageDigestExtensionsPerfTest {
 		System.out.println("elapsed time: " + ((System.currentTimeMillis() - start) / 1000.0) + "sec");
 		// no cache [23.401,23.788,23.842,23.555,23.542]
 		// cache algorithm [23.042,23.917,23.909,23.675]
-		// cache algorithm and PropertyDescriptor [1.822,1.858,1.819,1.793,1.793]
-		// cache algorithm and PropertyDescriptor and ObjectWriter [1.761,1.755,1.733,1.729,1.734]
+		// cache algorithm and PropertyDescriptor [1.917,1.872,1.87,1.88,1.88]
+		// cache algorithm and PropertyDescriptor and ObjectWriter [2.056,2.048,2.05,2.058,2.141]
 	}
 	
 	private static void process(int loop) {

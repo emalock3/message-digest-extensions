@@ -45,9 +45,9 @@ public final class MessageDigestExtensions {
 		}
 	}
 	
+	static final Algorithm DEFAULT_ALGORITHM = Algorithm.SHA512;
 	private static final ConcurrentHashMap<Class<?>, Algorithm> algorithmCache = new ConcurrentHashMap<>();
 	private static final ConcurrentHashMap<Class<?>, List<PropertyDescriptor>> digestKeysCache = new ConcurrentHashMap<>();
-	private static final ConcurrentHashMap<PropertyDescriptor, ReadMethodValueWriter> writerCache = new ConcurrentHashMap<>();
 	
 	private MessageDigestExtensions() {
 		// do nothing
@@ -67,7 +67,7 @@ public final class MessageDigestExtensions {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 				DataOutputStream dos = new DataOutputStream(baos)) {
 			for (PropertyDescriptor pd : descriptors) {
-				lookupWriter(pd).write(dos, input, pd);
+				ReadMethodValueWriter.createWriter(pd).write(dos, input, pd);
 			}
 			dos.flush();
 			digest.update(baos.toByteArray());
@@ -77,16 +77,6 @@ public final class MessageDigestExtensions {
 		} catch (IllegalArgumentException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private static ReadMethodValueWriter lookupWriter(PropertyDescriptor pd) {
-		ReadMethodValueWriter writer = writerCache.get(pd);
-		if (writer != null) {
-			return writer;
-		}
-		writer = ReadMethodValueWriter.createWriter(pd);
-		writerCache.put(pd, writer);
-		return writer;
 	}
 
 	private static List<PropertyDescriptor> lookupDigestKeys(Class<?> c) {
@@ -129,7 +119,7 @@ public final class MessageDigestExtensions {
 		if (algorithm != null) {
 			return algorithm;
 		}
-		algorithm = Algorithm.SHA512;
+		algorithm = DEFAULT_ALGORITHM;
 		DefaultMessageDigestAlgorithm mda = c.getAnnotation(DefaultMessageDigestAlgorithm.class);
 		if (mda != null) {
 			algorithm = mda.value();
