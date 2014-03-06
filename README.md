@@ -1,6 +1,6 @@
 # MessageDigestExtensions
 
-MessageDigestExtensions is a Java library. It provides a way to easily generate MessageDigest from Java object that implements marker interface.
+MessageDigestExtensions is a Java library. It provides a way to easily generate a cryptographic hash value from Java object that implements marker interface.
 
 ## How to Use (Maven 2 & 3)
 
