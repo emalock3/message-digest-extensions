@@ -14,9 +14,9 @@ public class FooTest {
 
 	@Test
 	public void test() {
-		String sha256 = "471686a68e99d5e8a88f3d056c86c0a7c11418f1aa258a62f06c8c117b6c60e8e4db35e662a852f406a169f705afc630a3cb3834a656849d6fbd4dfa9f5dfa39";
+		String sha256 = "82f5c445da9b67aaf8dbcee421fc396399f897870c24220511b2eab5a32f80b9";
 		Foo foo = new Foo("foo", 123, "hoge");
-		assertThat(foo.toHexMessageDigest(Algorithm.SHA512), is(sha256));
+		assertThat(foo.toHexMessageDigest(), is(sha256));
 		String sha1 = "27f82383143a3c21015451af32ea315c1a282838";
 		assertThat(foo.toHexMessageDigest(Algorithm.SHA1), is(sha1));
 	}
