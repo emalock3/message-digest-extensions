@@ -2,7 +2,12 @@
 
 MessageDigestExtensions is a Java library. It provides a way to easily generate a cryptographic hash value from Java object that implements MessageDigestable interface.
 
-## How to Use (Maven3)
+## Build with Maven
+
+### Prerequisites
+
+- Java 1.8+
+- Maven 3+
 
 ### pom.xml configuration
 
@@ -60,6 +65,8 @@ MessageDigestExtensions is a Java library. It provides a way to easily generate 
 			assertThat(foo.toHexMessageDigest(Algorithm.SHA1), is(sha1));
 		}
 	}
+
+`mvn clean test`
 
 See also [Example](https://github.com/emalock3/message-digest-extensions/tree/master/example).
 
