@@ -2,11 +2,9 @@ package com.github.emalock3.digest;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import lombok.experimental.ExtensionMethod;
 
 import org.junit.Test;
 
-@ExtensionMethod({MessageDigestExtensions.class})
 public class HogeTest {
 
 	@Test

@@ -5,13 +5,10 @@ import static org.junit.Assert.*;
 
 import java.nio.charset.Charset;
 
-import lombok.experimental.ExtensionMethod;
-
 import org.junit.Test;
 
 import com.github.emalock3.digest.MessageDigestExtensions.Algorithm;
 
-@ExtensionMethod(MessageDigestExtensions.class)
 public class PersonTest {
 
 	@Test

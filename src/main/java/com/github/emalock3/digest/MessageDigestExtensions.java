@@ -11,7 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -111,11 +110,7 @@ public final class MessageDigestExtensions {
 			throw new IllegalArgumentException(
 					String.format("DigestKey annotation is not found in class[%s]", c.getName()));
 		}
-		Collections.sort(descriptors, new Comparator<PropertyDescriptor>() {
-			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+		Collections.sort(descriptors, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 		digestKeysCache.put(c, descriptors);
 		return descriptors;
 	}

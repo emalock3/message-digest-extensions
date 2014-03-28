@@ -2,13 +2,11 @@ package com.github.emalock3.digest;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import lombok.experimental.ExtensionMethod;
 
 import org.junit.Test;
 
 import com.github.emalock3.digest.MessageDigestExtensions.Algorithm;
 
-@ExtensionMethod(MessageDigestExtensions.class)
 public class EmployeeTest {
 
 	@Test
