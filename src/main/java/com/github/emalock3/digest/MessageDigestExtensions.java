@@ -53,16 +53,17 @@ public final class MessageDigestExtensions {
 	private MessageDigestExtensions() {
 		// do nothing
 	}
-	
-	/**
-	 * Generate a message digest from target object.
-	 * 
-	 * @param input the MessageDigestable
-	 * @param algorithm the name of the algorithm requested
+    
+    /**
+     * Generate a message digest from a param.
+     * 
+     * @param param input parameters
 	 * @return the array of bytes for the resulting hash value.
-	 */
-	public static byte[] toMessageDigest(MessageDigestable input, Algorithm algorithm) {
+     */
+    public static byte[] toMessageDigest(MessageDigestParameter param) {
+        MessageDigestable input = param.getInput();
 		Class<?> c = input.getClass();
+        Algorithm algorithm = param.getAlgorithm() == null ? lookupAlgorithm(c) : param.getAlgorithm();
 		MessageDigest digest = from(algorithm);
 		List<PropertyDescriptor> descriptors = lookupDigestKeys(c);
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
@@ -70,6 +71,9 @@ public final class MessageDigestExtensions {
 			for (PropertyDescriptor pd : descriptors) {
 				ReadMethodValueWriter.createWriter(pd).write(dos, input, pd);
 			}
+            for (Object additionalValue : param.getAdditionalValues()) {
+                ReadMethodValueWriter.createWriter(additionalValue).writeValue(dos, additionalValue);
+            }
 			dos.flush();
 			digest.update(baos.toByteArray());
 			return digest.digest();
@@ -78,7 +82,7 @@ public final class MessageDigestExtensions {
 		} catch (IllegalArgumentException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 	
 	private static MessageDigest from(Algorithm algorithm) {
 		try {
@@ -140,16 +144,6 @@ public final class MessageDigestExtensions {
 		return algorithm;
 	}
 	
-	/**
-	 * Generate a message digest from target object.
-	 * 
-	 * @param input the MessageDigestable
-	 * @return the array of bytes for the resulting hash value.
-	 */
-	public static byte[] toMessageDigest(MessageDigestable input) {
-		return toMessageDigest(input, lookupAlgorithm(input.getClass()));
-	}
-	
 	private static String toHexString(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 		for (int b : bytes) {
@@ -158,25 +152,14 @@ public final class MessageDigestExtensions {
 		}
 		return sb.toString();
 	}
-	
-	/**
-	 * Generate a hex string of message digest from target object.
-	 * 
-	 * @param input the MessageDigestable
-	 * @param algorithm the name of the algorithm requested
-	 * @return the hex string for the resulting hash value.
-	 */
-	public static String toHexMessageDigest(MessageDigestable input, Algorithm algorithm) {
-		return toHexString(toMessageDigest(input, algorithm));
-	}
-	
-	/**
-	 * Generate a hex string of message digest from target object.
-	 * 
-	 * @param input the MessageDigestable
-	 * @return the hex string for the resulting hash value.
-	 */
-	public static String toHexMessageDigest(MessageDigestable input) {
-		return toHexString(toMessageDigest(input));
-	}
+    
+    /**
+     * Generate a hex string of message digest from a param.
+     * 
+     * @param param input parameters
+     * @return the hex string for the resulting hash value.
+     */
+    public static String toHexMessageDigest(MessageDigestParameter param) {
+        return toHexString(toMessageDigest(param));
+    }
 }

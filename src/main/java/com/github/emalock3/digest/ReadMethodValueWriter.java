@@ -19,18 +19,24 @@ abstract class ReadMethodValueWriter {
 				throw new RuntimeException(e);
 			}
 		}
-		Object value = m.invoke(target);
-		if (value != null) {
-			process(dos, target, m.invoke(target));
-		} else {
-			NULL_WRITER.process(dos, target, value);
-		}
+		writeValue(dos, m.invoke(target));
 	}
-	abstract void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException;
+	abstract void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException;
+    
+    void writeValue(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
+        if (value != null) {
+			process(dos, value);
+		} else {
+			NULL_WRITER.process(dos, value);
+		}
+    }
 	
 	static ReadMethodValueWriter createWriter(PropertyDescriptor pd) {
-		Class<?> type = pd.getPropertyType();
-		if (type == byte[].class) {
+		return createWriter(pd.getPropertyType());
+	}
+    
+    private static ReadMethodValueWriter createWriter(Class<?> type) {
+        if (type == byte[].class) {
 			return new ByteArrayWriter();
 		} else if (type == Boolean.TYPE) {
 			return new BooleanWriter();
@@ -55,82 +61,86 @@ abstract class ReadMethodValueWriter {
 		} else {
 			return new ObjectWriter();
 		}
-	}
+    }
+    
+    static ReadMethodValueWriter createWriter(Object value) {
+        return createWriter(value.getClass());
+    }
 
 	private static class ByteArrayWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.write((byte[]) value);
 		}
 	}
 	
 	private static class ObjectArrayWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeUTF(Arrays.toString((Object[]) value));
 		}
 	}
 	
 	private static class BooleanWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeBoolean((Boolean) value);
 		}
 	}
 	
 	private static class ByteWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeByte((Byte) value);
 		}
 	}
 	
 	private static class CharWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeChar((Character) value);
 		}
 	}
 	
 	private static class FloatWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeFloat((Float) value);
 		}
 	}
 	
 	private static class DoubleWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeDouble((Double) value);
 		}
 	}
 	
 	private static class ShortWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeShort((Short) value);
 		}
 	}
 	
 	private static class IntWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeInt((Integer) value);
 		}
 	}
 	
 	private static class LongWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeLong((Long) value);
 		}
 	}
 	
 	private static class StringWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeUTF(value.toString());
 		}
 	}
 	
 	private static class ObjectWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.writeUTF(value.toString());
 		}
 	}
 	
 	private static class NullWriter extends ReadMethodValueWriter {
-		void process(DataOutputStream dos, Object target, Object value) throws ReflectiveOperationException, IOException {
+		void process(DataOutputStream dos, Object value) throws ReflectiveOperationException, IOException {
 			dos.write(0);
 		}
 	}

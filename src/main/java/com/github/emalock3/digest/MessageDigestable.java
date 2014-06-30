@@ -4,19 +4,35 @@ import com.github.emalock3.digest.MessageDigestExtensions.Algorithm;
 
 public interface MessageDigestable {
     
+    default public MessageDigestParameter.Builder createMessageDigestParameterBuilder() {
+        return MessageDigestParameter.Builder.from(this);
+    }
+    
     default public byte[] toMessageDigest() {
-        return MessageDigestExtensions.toMessageDigest(this);
+        return toMessageDigest(
+                createMessageDigestParameterBuilder().build());
     }
     
     default public byte[] toMessageDigest(Algorithm algorithm) {
-        return MessageDigestExtensions.toMessageDigest(this, algorithm);
+        return toMessageDigest(
+                createMessageDigestParameterBuilder().algorithm(algorithm).build());
+    }
+    
+    default public byte[] toMessageDigest(MessageDigestParameter param) {
+        return MessageDigestExtensions.toMessageDigest(param);
     }
     
     default public String toHexMessageDigest() {
-        return MessageDigestExtensions.toHexMessageDigest(this);
+        return toHexMessageDigest(
+                createMessageDigestParameterBuilder().build());
     }
     
     default public String toHexMessageDigest(Algorithm algorithm) {
-        return MessageDigestExtensions.toHexMessageDigest(this, algorithm);
+        return toHexMessageDigest(
+                createMessageDigestParameterBuilder().algorithm(algorithm).build());
+    }
+    
+    default public String toHexMessageDigest(MessageDigestParameter param) {
+        return MessageDigestExtensions.toHexMessageDigest(param);
     }
 }
